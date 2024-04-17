@@ -30,8 +30,8 @@ with open(os.path.join(path_prompts, "prompts.tsv"), "r", encoding="utf-8") as p
         existing_filenames.add(filename)
 
 # Iterate over each WAV file in the input directory
-for file_path in glob.glob(os.path.join(path_new, "*.wav")):
-    filename = os.path.basename(file_path)
+for i, file_path in enumerate(glob.glob(os.path.join(path_new, "*.wav"))):
+    filename = f"wavs_{i + 1}"  # Assign ascending filenames like wavs_1, wavs_2, ...
 
     # Check if filename already exists in prompts.tsv
     if filename in existing_filenames:
