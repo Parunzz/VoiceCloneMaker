@@ -28,7 +28,6 @@ if not os.path.exists(prompts_file_path) or os.path.getsize(prompts_file_path) =
     # File doesn't exist or is empty, recreate it with the header
     with open(prompts_file_path, "w", encoding="utf-8") as prompts_file:
         prompts_file.write("")
-    existing_filenames = set()  # Initialize existing_filenames as an empty set
 
 # File exists and has content, read existing filenames from it
 existing_filenames = set()
@@ -39,14 +38,13 @@ with open(os.path.join(path_prompts, "prompts.tsv"), "r", encoding="utf-8") as p
 
 # Iterate over each WAV file in the input directory
 for i, file_path in enumerate(glob.glob(os.path.join(path_new, "*.wav"))):
-    filename = f"wavs_{i + 1}"  # Assign ascending filenames like wavs_1, wavs_2, ...
 
     # Check if filename already exists in prompts.tsv
-    if filename in existing_filenames:
-        print(f"Skipping transcription for {filename} as it already exists in prompts.tsv")
+    if file_path in existing_filenames:
+        print(f"Skipping transcription for {file_path} as it already exists in prompts.tsv")
         continue
 
-    print("computing this file : ",filename)   
+    print("computing this file : ",file_path)   
 
     # Transcribe the audio file
     transcriptions = pipe(
@@ -58,7 +56,7 @@ for i, file_path in enumerate(glob.glob(os.path.join(path_new, "*.wav"))):
     
     # Write the output filename and transcription to the prompts.tsv file
     with open(os.path.join(path_prompts, "prompts.tsv"), "a", encoding="utf-8") as prompts_file:
-        prompts_file.write(f"{filename}\t{transcriptions}\n")
+        prompts_file.write(f"{file_path}\t{transcriptions}\n")
     
-    print(f"Transcribed {filename}: {transcriptions}")
+    print(f"Transcribed {file_path}: {transcriptions}")
 
