@@ -2,7 +2,6 @@ import os
 import torch
 from transformers import pipeline
 import glob
-import zipfile
 
 MODEL_NAME = "biodatlab/whisper-th-medium-combined"
 lang = "th"
@@ -19,7 +18,6 @@ pipe = pipeline(
 path_prompts = "./th/data/"  # Directory to save the prompts.tsv file
 path_new = "./wavs/"  # Output directory to save WAV files with the new sample rate
 zip_file_path = "./wav.zip"
-th_path = "./th/"
 # Create the output directory if it doesn't exist
 if not os.path.exists(path_prompts):
     os.makedirs(path_prompts)
@@ -64,10 +62,3 @@ for i, file_path in enumerate(glob.glob(os.path.join(path_new, "*.wav"))):
     
     print(f"Transcribed {filename}: {transcriptions}")
 
-# Zip all WAV files into a single archive
-with zipfile.ZipFile(zip_file_path, 'w') as zipf:
-    for root, _, files in os.walk(th_path):
-        for file in files:
-            zipf.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), th_path))
-
-print(f"All WAV files zipped into {zip_file_path}.")
