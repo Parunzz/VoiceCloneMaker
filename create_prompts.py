@@ -2,6 +2,7 @@ import os
 import torch
 from transformers import pipeline
 import glob
+import zipfile
 
 MODEL_NAME = "biodatlab/whisper-th-medium-combined"
 lang = "th"
@@ -15,14 +16,23 @@ pipe = pipeline(
     device=device,
 )
 
-path_prompts = "./prompts/"  # Directory to save the prompts.tsv file
+path_prompts = "./th/data/"  # Directory to save the prompts.tsv file
 path_new = "./wavs/"  # Output directory to save WAV files with the new sample rate
-
+zip_file_path = "./wav.zip"
+th_path = "./th/"
 # Create the output directory if it doesn't exist
 if not os.path.exists(path_prompts):
     os.makedirs(path_prompts)
 
-# Read existing filenames from prompts.tsv
+# Check if prompts.tsv exists and its content is valid
+prompts_file_path = os.path.join(path_prompts, "prompts.tsv")
+if not os.path.exists(prompts_file_path) or os.path.getsize(prompts_file_path) == 0:
+    # File doesn't exist or is empty, recreate it with the header
+    with open(prompts_file_path, "w", encoding="utf-8") as prompts_file:
+        prompts_file.write("filename\ttranscription\n")
+    existing_filenames = set()  # Initialize existing_filenames as an empty set
+
+# File exists and has content, read existing filenames from it
 existing_filenames = set()
 with open(os.path.join(path_prompts, "prompts.tsv"), "r", encoding="utf-8") as prompts_file:
     for line in prompts_file:
@@ -53,3 +63,11 @@ for i, file_path in enumerate(glob.glob(os.path.join(path_new, "*.wav"))):
         prompts_file.write(f"{filename}\t{transcriptions}\n")
     
     print(f"Transcribed {filename}: {transcriptions}")
+
+# Zip all WAV files into a single archive
+with zipfile.ZipFile(zip_file_path, 'w') as zipf:
+    for root, _, files in os.walk(th_path):
+        for file in files:
+            zipf.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), th_path))
+
+print(f"All WAV files zipped into {zip_file_path}.")

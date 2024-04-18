@@ -1,9 +1,11 @@
 import os
 from moviepy.editor import AudioFileClip
 import glob
+import zipfile
 
 path_old = "./wavs-old/"  # Input directory containing WAV files
 path_new = "./wavs/"  # Output directory to save WAV files with the new sample rate
+zip_file_path = "./wav.zip"
 
 # Create the output directory if it doesn't exist
 for path in [path_old, path_new]:
@@ -43,3 +45,11 @@ for file in glob.glob(os.path.join(path_old, "*.wav")):
         counter += 1
 
 print("Conversion completed successfully.")
+
+# Zip all WAV files into a single archive
+with zipfile.ZipFile(zip_file_path, 'w') as zipf:
+    for root, _, files in os.walk(path_new):
+        for file in files:
+            zipf.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), path_new))
+
+print(f"All WAV files zipped into {zip_file_path}.")
