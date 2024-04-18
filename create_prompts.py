@@ -27,7 +27,7 @@ prompts_file_path = os.path.join(path_prompts, "prompts.tsv")
 if not os.path.exists(prompts_file_path) or os.path.getsize(prompts_file_path) == 0:
     # File doesn't exist or is empty, recreate it with the header
     with open(prompts_file_path, "w", encoding="utf-8") as prompts_file:
-        prompts_file.write("filename\ttranscription\n")
+        prompts_file.write("")
     existing_filenames = set()  # Initialize existing_filenames as an empty set
 
 # File exists and has content, read existing filenames from it
