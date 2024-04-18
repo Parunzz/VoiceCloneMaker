@@ -5,7 +5,7 @@ import zipfile
 
 path_old = "./wavs-old/"  # Input directory containing WAV files
 path_new = "./wavs/"  # Output directory to save WAV files with the new sample rate
-zip_file_path = "./wav.zip"
+zip_file_path = "./wavs.zip"
 
 # Create the output directory if it doesn't exist
 for path in [path_old, path_new]:

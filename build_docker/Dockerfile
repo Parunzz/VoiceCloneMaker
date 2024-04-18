@@ -1,4 +1,4 @@
-FROM java:8
+FROM openjdk:11
 
 # Versions of different tools installed.
 ENV NODEJS_VERSION="v8.9.3"
@@ -14,20 +14,20 @@ RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-bac
 RUN sed -i '/deb http:\/\/deb.debian.org\/debian jessie-updates main/d' /etc/apt/sources.list
 
 
-RUN apt-get -o Acquire::Check-Valid-Until=false update
+# RUN apt-get -o Acquire::Check-Valid-Until=false update
 
-RUN apt-get install -y \
-      sox \
-      curl \
-      libicu-dev \
-      g++ \
-      git \
-      python \
-      python-dev \
-      python-setuptools \
-      unzip \
-      wget \
-      nano
+# RUN apt-get install -y \
+#       sox \
+#       curl \
+#       libicu-dev \
+#       g++ \
+#       git \
+#       python \
+#       python-dev \
+#       python-setuptools \
+#       unzip \
+#       wget \
+#       nano
 
 # Clone language resources
 WORKDIR /usr/local/src
@@ -37,9 +37,9 @@ RUN git clone https://github.com/wannaphongcom/language-resources
 ENV PYTHONPATH="/usr/local/src/language-resources"
 
 # Install python pip
-WORKDIR /opt
-RUN curl -k https://bootstrap.pypa.io/get-pip.py > get-pip.py && ls -l && python get-pip.py && rm get-pip.py
-RUN pip install PyICU
+# WORKDIR /opt
+# RUN curl -k https://bootstrap.pypa.io/get-pip.py > get-pip.py && ls -l && python get-pip.py && rm get-pip.py
+# RUN pip install PyICU
 
 # Install android SDK
 #RUN wget https://dl.google.com/android/repository/sdk-tools-linux-${ANDROID_TOOLS_VERSION}.zip  \
@@ -67,28 +67,28 @@ ENV PATH $PATH:/opt/node-${NODEJS_VERSION}-linux-x64/bin
 # Set common env vars
 ENV NODE_ENV production
 
-RUN  apt-get install -y \
-      automake \
-      bc \
-      curl \
-      g++ \
-      git \
-      libc-dev \
-      libreadline-dev \
-      libtool \
-      make \
-      ncurses-dev \
-      nvi \
-      pkg-config \
-      python \
-      python-dev \
-      python-setuptools \
-      unzip \
-      wavpack \
-      wget \
-      zip \
-      zlib1g-dev \
-    && rm -rf /var/lib/apt/lists/*
+# RUN  apt-get install -y \
+#       automake \
+#       bc \
+#       curl \
+#       g++ \
+#       git \
+#       libc-dev \
+#       libreadline-dev \
+#       libtool \
+#       make \
+#       ncurses-dev \
+#       nvi \
+#       pkg-config \
+#       python \
+#       python-dev \
+#       python-setuptools \
+#       unzip \
+#       wavpack \
+#       wget \
+#       zip \
+#       zlib1g-dev \
+#     && rm -rf /var/lib/apt/lists/*
 
 # Fetch and prepare Festival & friends
 WORKDIR /usr/local/src/tools
